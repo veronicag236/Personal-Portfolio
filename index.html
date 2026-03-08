@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veronica Guo</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #FEFAF8;
+  --surface: #fff8fb;
+  --surface2:#f5fce8;
+  --pink:    #FFBDD3;
+  --pink2:   #FFCFDF;
+  --yellow:  #FEFDCA;
+  --lime:    #D9F6A6;
+  --green:   #CDF589;
+  --text:    #1e1220;
+  --muted:   #907080;
+  --dark:    #1e1220;
+  --border:  rgba(255,189,211,0.45);
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: 'Crimson Pro', serif; font-size: 18px; line-height: 1.6;
+  cursor: none; overflow-x: hidden;
+}
+
+/* ── CURSOR ── */
+#cursor { position:fixed; width:10px; height:10px; background:var(--pink); border-radius:50%; pointer-events:none; z-index:9999; }
+#cursor-ring { position:fixed; width:36px; height:36px; border:1.5px solid rgba(255,189,211,0.7); border-radius:50%; pointer-events:none; z-index:9998; transition:width 0.2s,height 0.2s,border-color 0.2s; }
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:18px 48px; background:rgba(254,250,248,0.94);
+  backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,189,211,0.2);
+}
+.nav-logo { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.15em; color:var(--dark); }
+.nav-links { display:flex; gap:24px; list-style:none; }
+.nav-links a { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color 0.2s; }
+.nav-links a:hover { color:var(--dark); }
+
+/* ── HERO ── */
+#hero {
+  min-height:100vh; display:flex; flex-direction:column; justify-content:flex-end;
+  padding:0 48px 80px; position:relative; overflow:hidden;
+  background:linear-gradient(160deg,#fff8fb 0%,#fdf8f0 40%,#f6fce6 100%);
+}
+.grid-bg {
+  position:absolute; inset:0; z-index:0;
+  background-image: linear-gradient(rgba(255,189,211,0.18) 1px,transparent 1px), linear-gradient(90deg,rgba(255,189,211,0.18) 1px,transparent 1px);
+  background-size:60px 60px; animation:gridShift 22s linear infinite;
+}
+.grid-bg::after { content:''; position:absolute; inset:0; background:linear-gradient(to top,rgba(205,245,137,0.22) 0%,rgba(254,253,202,0.18) 30%,rgba(255,189,211,0.10) 65%,transparent 90%); pointer-events:none; }
+@keyframes gridShift { from{background-position:0 0} to{background-position:60px 60px} }
+.orb { position:absolute; border-radius:50%; filter:blur(70px); pointer-events:none; }
+.orb1 { width:560px;height:560px;background:rgba(255,189,211,0.35);top:-120px;right:-80px;animation:drift1 13s ease-in-out infinite; }
+.orb2 { width:420px;height:420px;background:rgba(205,245,137,0.30);bottom:-60px;left:-100px;animation:drift2 16s ease-in-out infinite; }
+.orb3 { width:320px;height:320px;background:rgba(254,253,202,0.40);top:38%;left:38%;animation:drift3 10s ease-in-out infinite; }
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(-28px,36px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(36px,-28px)}}
+@keyframes drift3{0%,100%{transform:translate(0,0)}50%{transform:translate(-18px,18px)}}
+.hero-content { position:relative; z-index:1; }
+.hero-label { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.25em; text-transform:uppercase; color:var(--muted); margin-bottom:24px; opacity:0; animation:fadeUp 0.8s 0.3s ease forwards; }
+.hero-name { font-family:'Bebas Neue',sans-serif; font-size:clamp(72px,14vw,180px); line-height:0.9; letter-spacing:0.02em; color:var(--dark); opacity:0; animation:fadeUp 0.9s 0.5s ease forwards; }
+.hero-name em { background:linear-gradient(120deg,#FFBDD3,#CDF589); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-style:normal; }
+.hero-sub { font-family:'Crimson Pro',serif; font-style:italic; font-size:clamp(18px,2.5vw,26px); color:rgba(30,18,32,0.5); margin-top:16px; opacity:0; animation:fadeUp 0.9s 0.8s ease forwards; }
+.hero-tags { display:flex; gap:10px; margin-top:32px; flex-wrap:wrap; opacity:0; animation:fadeUp 0.9s 1.1s ease forwards; }
+.hero-tag { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.13em; text-transform:uppercase; padding:7px 14px; border-radius:100px; color:var(--dark); cursor:pointer; transition:transform 0.2s,box-shadow 0.2s; }
+.hero-tag:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+.hero-tag:nth-child(1){background:var(--pink);}
+.hero-tag:nth-child(2){background:var(--yellow);}
+.hero-tag:nth-child(3){background:var(--lime);}
+.hero-tag:nth-child(4){background:var(--green);}
+.hero-tag:nth-child(5){background:var(--pink2);}
+.scroll-hint { position:absolute; bottom:32px; right:48px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); writing-mode:vertical-rl; display:flex; align-items:center; gap:12px; z-index:1; opacity:0; animation:fadeIn 1s 1.6s ease forwards; }
+.scroll-hint::before { content:''; display:block; width:1px; height:60px; background:linear-gradient(to bottom,transparent,var(--pink)); }
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ── SECTIONS ── */
+section { padding:110px 48px; position:relative; }
+.section-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color:var(--muted); margin-bottom:20px; display:flex; align-items:center; gap:12px; }
+.section-label::after { content:''; flex:1; max-width:60px; height:1px; background:var(--pink); opacity:0.6; }
+.section-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(48px,7vw,96px); line-height:0.95; color:var(--dark); margin-bottom:32px; }
+
+/* ── ABOUT ── */
+#about { background:var(--bg); }
+.about-grid { display:grid; grid-template-columns:1.2fr 1fr; gap:80px; align-items:start; }
+.about-text p { font-size:18px; color:rgba(30,18,32,0.72); line-height:1.85; margin-bottom:18px; }
+.about-text p strong { color:var(--dark); font-weight:600; }
+.about-sidebar { display:flex; flex-direction:column; gap:16px; }
+.about-card { border-radius:16px; padding:24px; transition:transform 0.25s ease; }
+.about-card:hover { transform:translateY(-3px); }
+.about-card:nth-child(1){ background:var(--pink2); }
+.about-card:nth-child(2){ background:var(--yellow); }
+.about-card-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:rgba(30,18,32,0.5); margin-bottom:8px; }
+.about-card-content { font-size:15px; color:var(--dark); line-height:1.7; }
+
+/* ── INTERESTS ── */
+#interests { background:var(--surface2); }
+.interests-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+.interest-card { background:var(--bg); border-radius:16px; padding:28px; border:1.5px solid rgba(255,189,211,0.25); transition:transform 0.25s,box-shadow 0.25s; }
+.interest-card:hover { transform:translateY(-4px); box-shadow:0 10px 30px rgba(255,189,211,0.2); }
+.interest-icon { font-size:30px; margin-bottom:12px; }
+.interest-title { font-family:'Bebas Neue',sans-serif; font-size:24px; color:var(--dark); margin-bottom:10px; }
+.interest-card p { font-size:15px; color:rgba(30,18,32,0.65); line-height:1.75; margin-bottom:10px; }
+.book-list { list-style:none; margin-top:8px; }
+.book-list li { font-size:14px; color:rgba(30,18,32,0.7); padding:6px 0; border-bottom:1px solid rgba(30,18,32,0.06); line-height:1.5; }
+.book-list li:last-child { border-bottom:none; }
+.hobby-tags { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
+.hobby-tag { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; padding:5px 11px; border-radius:100px; color:var(--dark); }
+
+/* ── BUILDS ── */
+#builds { background:var(--surface); }
+.builds-tabs { display:flex; gap:8px; margin-bottom:48px; flex-wrap:wrap; }
+.build-tab { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; padding:10px 20px; border-radius:100px; border:1.5px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; transition:all 0.25s ease; }
+.build-tab.active,.build-tab:hover { background:var(--pink); border-color:var(--pink); color:var(--dark); }
+.build-panel { display:none; }
+.build-panel.active { display:block; animation:fadeUp 0.4s ease; }
+.build-hero { display:grid; grid-template-columns:1.2fr 1fr; gap:60px; align-items:start; background:var(--bg); border-radius:20px; padding:48px; border:1.5px solid rgba(255,189,211,0.3); }
+.build-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(36px,5vw,58px); color:var(--dark); line-height:1; margin-bottom:12px; }
+.build-subtitle { font-style:italic; color:var(--muted); font-size:16px; margin-bottom:20px; }
+.build-desc { font-size:16px; color:rgba(30,18,32,0.7); line-height:1.8; margin-bottom:14px; }
+.build-tags { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+.build-tag { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; padding:5px 12px; border-radius:100px; color:var(--dark); }
+.bt-pink{background:var(--pink);} .bt-lime{background:var(--lime);} .bt-yellow{background:var(--yellow);} .bt-green{background:var(--green);}
+.build-links { display:flex; flex-direction:column; gap:9px; }
+.build-link { display:flex; align-items:center; gap:10px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; padding:11px 18px; border-radius:100px; text-decoration:none; color:var(--dark); border:1.5px solid var(--border); transition:transform 0.2s,background 0.2s,border-color 0.2s; }
+.build-link:hover { transform:translateY(-2px); background:var(--pink); border-color:var(--pink); }
+.build-link .arrow { margin-left:auto; }
+.build-stats { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+.build-stat { border-radius:12px; padding:20px; text-align:center; transition:transform 0.2s; }
+.build-stat:hover { transform:translateY(-2px); }
+.build-stat:nth-child(1){background:var(--pink);} .build-stat:nth-child(2){background:var(--yellow);}
+.build-stat:nth-child(3){background:var(--lime);} .build-stat:nth-child(4){background:var(--green);}
+.build-stat-num { font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--dark); line-height:1; }
+.build-stat-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(30,18,32,0.6); margin-top:4px; }
+.info-box { border-radius:12px; padding:20px; margin-bottom:14px; }
+.info-box-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:10px; opacity:0.6; }
+.info-box-content { font-size:13px; line-height:1.95; color:var(--dark); }
+.cow-values { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+.cow-value { border-radius:12px; padding:18px; }
+.cow-value:nth-child(1){background:var(--pink2);} .cow-value:nth-child(2){background:var(--yellow);}
+.cow-value:nth-child(3){background:var(--lime);} .cow-value:nth-child(4){background:var(--green);}
+.cow-value-icon { font-size:22px; margin-bottom:6px; }
+.cow-value-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--dark); margin-bottom:4px; }
+.cow-value-desc { font-size:12px; color:rgba(30,18,32,0.65); line-height:1.5; }
+
+/* ── EXPERIENCE ── */
+#experience { background:var(--bg); }
+.exp-layout { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; }
+.highlight-box { border-radius:20px; padding:36px; margin-bottom:32px; }
+.highlight-box-title { font-family:'Bebas Neue',sans-serif; font-size:32px; color:var(--dark); margin-bottom:6px; }
+.highlight-box-sub { font-style:italic; color:rgba(30,18,32,0.6); font-size:15px; margin-bottom:20px; }
+.award-list { display:flex; flex-direction:column; gap:11px; }
+.award-item { display:flex; gap:10px; font-size:14px; color:var(--dark); line-height:1.55; }
+.award-item .medal { flex-shrink:0; font-size:16px; }
+.timeline { position:relative; }
+.timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:linear-gradient(to bottom,var(--pink),var(--lime),var(--green)); }
+.tl-item { padding:0 0 38px 36px; position:relative; opacity:1; transform:translateX(0); transition:opacity 0.5s ease,transform 0.5s ease; }
+.tl-item.animate { opacity:0; transform:translateX(-20px); }
+.tl-item.animate.visible { opacity:1; transform:translateX(0); }
+.tl-dot { position:absolute; left:-6px; top:5px; width:13px; height:13px; border-radius:50%; background:var(--bg); border:2px solid var(--pink); transition:background 0.3s; }
+.tl-item:hover .tl-dot { background:var(--pink); }
+.tl-date { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+.tl-role { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--dark); letter-spacing:0.04em; margin-bottom:2px; }
+.tl-org { font-size:14px; color:var(--muted); margin-bottom:8px; }
+.tl-desc { font-size:14px; color:rgba(30,18,32,0.62); line-height:1.7; }
+.tl-award { display:inline-block; margin-top:6px; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; padding:3px 10px; border-radius:100px; color:var(--dark); background:var(--yellow); }
+.activities-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.activity-chip { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; padding:10px 14px; border-radius:10px; color:var(--dark); transition:transform 0.2s; }
+.activity-chip:hover { transform:translateY(-2px); }
+.activity-chip:nth-child(odd){background:var(--pink2);}
+.activity-chip:nth-child(even){background:var(--surface2);}
+.activity-chip strong { display:block; font-size:10px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:2px; }
+.activity-chip span { font-size:10px; opacity:0.6; }
+
+/* ── VIDEOGRAPHY ── */
+#videography { background:var(--surface2); }
+.video-intro { max-width:680px; margin-bottom:48px; }
+.video-intro p { font-size:18px; color:rgba(30,18,32,0.7); line-height:1.85; }
+.video-intro p em { font-style:italic; color:var(--dark); }
+.video-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.video-card { border-radius:16px; overflow:hidden; background:var(--bg); border:1.5px solid rgba(255,189,211,0.3); transition:transform 0.3s,box-shadow 0.3s; cursor:pointer; text-decoration:none; color:var(--dark); display:block; }
+.video-card:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(255,189,211,0.35); }
+.video-thumb { width:100%; aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; }
+.video-thumb-1{background:linear-gradient(135deg,var(--pink),var(--pink2));}
+.video-thumb-2{background:linear-gradient(135deg,var(--lime),var(--green));}
+.video-play { width:56px; height:56px; background:rgba(255,255,255,0.9); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; transition:transform 0.2s; }
+.video-card:hover .video-play { transform:scale(1.1); }
+.video-info { padding:20px 24px; }
+.video-title { font-family:'Bebas Neue',sans-serif; font-size:22px; margin-bottom:4px; }
+.video-desc { font-size:14px; color:var(--muted); line-height:1.6; }
+.video-link-label { display:inline-flex; align-items:center; gap:6px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; margin-top:12px; color:var(--dark); opacity:0.6; }
+.youtube-cta { margin-top:32px; display:flex; justify-content:center; }
+.youtube-btn { display:inline-flex; align-items:center; gap:10px; background:var(--pink); color:var(--dark); text-decoration:none; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; padding:16px 32px; border-radius:100px; transition:transform 0.2s,box-shadow 0.2s; }
+.youtube-btn:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(255,189,211,0.5); }
+
+/* ── CONTACT ── */
+#contact { min-height:60vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; background:linear-gradient(135deg,#fff0f6 0%,#fffde8 50%,#edfcd4 100%); position:relative; overflow:hidden; }
+#contact .section-title { font-size:clamp(64px,12vw,130px); }
+.contact-sub { font-style:italic; font-size:20px; color:rgba(30,18,32,0.5); margin-bottom:48px; margin-top:12px; }
+.contact-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; max-width:520px; width:100%; }
+.contact-btn { display:flex; flex-direction:column; align-items:center; gap:6px; padding:20px 16px; border-radius:16px; text-decoration:none; color:var(--dark); transition:transform 0.25s,box-shadow 0.25s; }
+.contact-btn:hover { transform:translateY(-4px); box-shadow:0 10px 28px rgba(0,0,0,0.1); }
+.contact-btn:nth-child(1){background:var(--pink);}
+.contact-btn:nth-child(2){background:var(--yellow);}
+.contact-btn:nth-child(3){background:var(--lime);}
+.contact-btn-icon { font-size:24px; }
+.contact-btn-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; }
+
+/* ── FOOTER ── */
+footer { padding:28px 48px; border-top:1px solid rgba(255,189,211,0.3); display:flex; justify-content:space-between; align-items:center; background:var(--bg); }
+.footer-logo { font-family:'Bebas Neue',sans-serif; font-size:18px; color:var(--muted); letter-spacing:0.1em; }
+.footer-copy { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.12em; }
+
+/* ── REVEAL ── */
+.reveal { opacity:1; transform:translateY(0); transition:opacity 0.7s ease,transform 0.7s ease; }
+.reveal.animate { opacity:0; transform:translateY(36px); }
+.reveal.animate.visible { opacity:1; transform:translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  nav{padding:16px 24px;} .nav-links{display:none;}
+  section{padding:80px 24px;} #hero{padding:0 24px 64px;}
+  .about-grid,.build-hero,.exp-layout,.video-grid{grid-template-columns:1fr;gap:40px;}
+  .interests-grid{grid-template-columns:1fr 1fr;}
+  footer{flex-direction:column;gap:10px;text-align:center;}
+}
+@media(max-width:600px){
+  .interests-grid{grid-template-columns:1fr;}
+  .activities-grid{grid-template-columns:1fr;}
+  .build-stats,.cow-values{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">VG</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#interests">Interests</a></li>
+    <li><a href="#builds">Builds</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#videography">Videography</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="grid-bg"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="hero-content">
+    <p class="hero-label">Engineer · Entrepreneur · Community Builder · Creator</p>
+    <h1 class="hero-name">VERONICA<br><em>GUO</em></h1>
+    <p class="hero-sub">Studying Materials Science & Engineering and Business at Penn. Building things that matter — from algae to algorithms.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">🌿 Cleantech</span>
+      <span class="hero-tag">♟ Chess</span>
+      <span class="hero-tag">🎬 Creator</span>
+      <span class="hero-tag">📚 Reader</span>
+      <span class="hero-tag">📍 Vancouver · Philadelphia</span>
+    </div>
+  </div>
+  <div class="scroll-hint">Scroll</div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text">
+      <p class="section-label">001 — About</p>
+      <h2 class="section-title reveal">WHO<br>I AM</h2>
+      <p class="reveal">I'm <strong>Yu Han (Veronica) Guo</strong> — a student in the Jerome Fisher Program in Management & Technology at the University of Pennsylvania, pursuing dual degrees in <strong>Materials Science & Engineering</strong> and <strong>Wharton Business</strong>.</p>
+      <p class="reveal">Since elementary school, I was a STEM-learning person: math, science fairs, biology olympiads. But near the end of high school, I began reflecting on the dominance of number- and logic-heavy thinking in my life. What I thought was important — rationality and analysis — began to appear less relevant in the grand scheme of things. I started to value the arts more: writing, making vlogs, doing crafts. I realized how much I had given up in pursuit of efficiency.</p>
+      <p class="reveal">I have a great ambition to pursue entrepreneurship — specifically, to develop a renewable energy technology and implement it globally. But I don't want to build in a way that loses the capacity to reflect, to take time, to be critical of the world and of my own practice. As the speed at which we build accelerates, the consequences of those builds grow too. I think it's essential not to lose sight of the purpose of it all: <strong>to make the world a more human dwelling place.</strong></p>
+      <p class="reveal">Artists are the key to this. They have the power to share truths, to correct the lies we're fed, to both be and become. They share the most intimacy with our society because they share the truest versions of themselves — and the world reveals the truth back to them.</p>
+    </div>
+    <div class="about-sidebar reveal">
+      <div class="about-card">
+        <div class="about-card-label">Education</div>
+        <div class="about-card-content">
+          <strong>University of Pennsylvania</strong><br>
+          Jerome Fisher M&T Program<br>
+          BSE Materials Science & Engineering<br>
+          BSE Wharton<br>
+          <span style="color:var(--muted);font-size:14px;">May 2029 · Philadelphia, PA</span>
+        </div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-label">Languages</div>
+        <div class="about-card-content">
+          English (native) · Chinese (native) · French (advanced)
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERESTS -->
+<section id="interests">
+  <p class="section-label">002 — Interests</p>
+  <h2 class="section-title reveal">WHAT I<br>LOVE</h2>
+  <div class="interests-grid">
+
+    <div class="interest-card reveal">
+      <div class="interest-icon">📚</div>
+      <div class="interest-title">Reading</div>
+      <p>I'm a huge book nerd. I read across philosophy, literary fiction, science, and memoir — always looking for books that challenge how I see the world.</p>
+      <ul class="book-list">
+        <li>📖 <em>The Brothers Karamazov</em> — Dostoevsky</li>
+        <li>📖 <em>The Stranger</em> — Albert Camus</li>
+        <li>📖 <em>Giovanni's Room</em> — James Baldwin</li>
+        <li>📖 <em>Educated</em> — Tara Westover</li>
+        <li>📖 <em>The Remains of the Day</em> — Kazuo Ishiguro</li>
+      </ul>
+    </div>
+
+    <div class="interest-card reveal">
+      <div class="interest-icon">🌍</div>
+      <div class="interest-title">Travel & Food</div>
+      <p>I seek out the best food in every city I visit and love listening to the stories of the people I meet along the way. Exploring new places — and new perspectives — is one of my greatest joys.</p>
+      <p>I've recently developed a somewhat obsessive interest in making the perfect <strong>yogurt bowl</strong>. Still perfecting the granola-to-fruit ratio.</p>
+    </div>
+
+    <div class="interest-card reveal">
+      <div class="interest-icon">🎨</div>
+      <div class="interest-title">Art & Philosophy</div>
+      <p>I believe artists are essential to keeping the world human. As technology accelerates, the capacity to reflect, to take time, to be critical — these become more valuable, not less.</p>
+      <p>I write reflections, make vlogs, and try to carry a little of that artistic sensibility into everything I build.</p>
+    </div>
+
+    <div class="interest-card reveal">
+      <div class="interest-icon">♟</div>
+      <div class="interest-title">Chess</div>
+      <p>Chess has been one of the most formative parts of my life — competing internationally, coaching 105+ students, and founding a tournament org to expand access to the game.</p>
+      <div class="hobby-tags">
+        <span class="hobby-tag" style="background:var(--yellow);">Women's FIDE Master</span>
+        <span class="hobby-tag" style="background:var(--lime);">#1 Junior Female, Canada</span>
+        <span class="hobby-tag" style="background:var(--pink);">Team Canada</span>
+      </div>
+    </div>
+
+    <div class="interest-card reveal">
+      <div class="interest-icon">🎵</div>
+      <div class="interest-title">Music & Community</div>
+      <p>I sing in choir and love the experience of making something together with other people. I'm also the person who organizes the get-togethers — I genuinely love bringing people into the same room.</p>
+    </div>
+
+    <div class="interest-card reveal">
+      <div class="interest-icon">🏃</div>
+      <div class="interest-title">Running & Dogs</div>
+      <p>Running clears my head like nothing else. I also volunteer at the Penn Vet Working Dog Center — training dogs is endlessly fascinating, and there's something deeply meditative about it.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- BUILDS -->
+<section id="builds">
+  <p class="section-label">003 — Builds</p>
+  <h2 class="section-title reveal">WHAT<br>I'VE BUILT</h2>
+  <div class="builds-tabs reveal">
+    <button class="build-tab active" onclick="showBuild('bpv',this)">🌿 BPV Research</button>
+    <button class="build-tab" onclick="showBuild('cow',this)">🐄 COW Project</button>
+    <button class="build-tab" onclick="showBuild('aerodash',this)">✈ AeroDash</button>
+    <button class="build-tab" onclick="showBuild('other',this)">+ More</button>
+  </div>
+
+  <!-- BPV -->
+  <div class="build-panel active" id="panel-bpv">
+    <div class="build-hero">
+      <div>
+        <div class="build-title">Dual-Purpose<br>Biological Photovoltaics</div>
+        <div class="build-subtitle">Patent-pending · September 2021 – Present</div>
+        <div class="build-tags">
+          <span class="build-tag bt-lime">Cleantech</span>
+          <span class="build-tag bt-pink">Biotech</span>
+          <span class="build-tag bt-yellow">Patent Pending</span>
+          <span class="build-tag bt-green">ISEF</span>
+        </div>
+        <p class="build-desc">Developed and optimized a dual-purpose BPV using <em>A. platensis</em> that simultaneously generates <strong>452 mW/m²</strong> of electricity while treating wastewater with <strong>97.5% nutrient removal</strong> and ~84% heavy-metal removal — at 83.73% lower cost than Microbial Fuel Cells.</p>
+        <p class="build-desc">Provisional Patent Owner: <em>"Photosynthetic Microorganism Powered Energy Harvesting System for Treating Wastewater."</em> Invited to visit Howe Lab at Cambridge University. Presented at 2 international research conferences.</p>
+        <p class="build-desc">This research underpins <strong>Algaefy Enterprises LTD</strong>, delivering renewable energy and wastewater treatment to underserved regions globally. Currently piloting with Loudong General Nice Resources in Xiaoyi, Shanxi.</p>
+        <div class="build-links">
+          <a class="build-link" href="https://isef.net/project/enev054t-biological-photovoltaic-for-wastewater-and-energy" target="_blank">🔬 ISEF Project Page <span class="arrow">↗</span></a>
+          <a class="build-link" href="https://www.researchgate.net/publication/375745464_Bioelectric_Batteries_Using_Algae_to_Make_the_Battery_Renewable" target="_blank">📄 Article 1 — Bioelectric Batteries Using Algae <span class="arrow">↗</span></a>
+          <a class="build-link" href="https://www.researchgate.net/publication/375745604_Biological_Photovoltaics_Testing_Algae_for_the_Optimal_Battery" target="_blank">📄 Article 2 — BPVs: Testing Algae for Optimal Battery <span class="arrow">↗</span></a>
+          <a class="build-link" href="https://crgconferences.com/conference-admin/uploads/energytechconference.com_391/1699612024.pdf" target="_blank">🎤 Conference 1 — Energy Tech Conference <span class="arrow">↗</span></a>
+          <a class="build-link" href="https://renewableenergyconferences.com/2023/" target="_blank">🎤 Conference 2 — Renewable Energy Conference 2023 <span class="arrow">↗</span></a>
+          <a class="build-link" href="https://partner.projectboard.world/ysc/project/a-novel-cost-effective-biological-photovoltaic-for-wastewater-treatment" target="_blank">📄 Novel Cost-Effective BPV for Wastewater <span class="arrow">↗</span></a>
+          <a class="build-link" href="https://www.allaboutalgae.ca/" target="_blank">🌿 All About Algae <span class="arrow">↗</span></a>
+        </div>
+      </div>
+      <div>
+        <div class="build-stats">
+          <div class="build-stat"><div class="build-stat-num">452</div><div class="build-stat-label">mW/m² generated</div></div>
+          <div class="build-stat"><div class="build-stat-num">97.5%</div><div class="build-stat-label">Nutrient removal</div></div>
+          <div class="build-stat"><div class="build-stat-num">83.7%</div><div class="build-stat-label">Cheaper than MFCs</div></div>
+          <div class="build-stat"><div class="build-stat-num">$58k+</div><div class="build-stat-label">Awards won</div></div>
+        </div>
+        <div class="info-box" style="background:var(--yellow);">
+          <div class="info-box-label">Science Fair Awards</div>
+          <div class="info-box-content">
+            🥉 3rd Award, Environmental Engineering — ISEF 2025<br>
+            🏆 Best Delegation Award — MILSET-ESI (700+ students, 30+ countries)<br>
+            🥇 Gold — CWSF 2024 (multiple university awards + Energy Challenge + Stockholm Water Prize Finalist + Hydrogen Optimized Green Energy Award + Youth Can Innovate)<br>
+            🥇 Gold — CWSF 2023 (U Alberta + Western + Energy Challenge + Youth Can Innovate)<br>
+            🥈 Silver — CWSF 2022 (Western + Energy Challenge)<br>
+            🚀 2× Conrad Innovator ('24 & '25) · 💎 Diamond Challenge ('24 & '25) · 🌊 Blue Ocean T300
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COW -->
+  <div class="build-panel" id="panel-cow">
+    <div class="build-hero">
+      <div>
+        <div class="build-title">COW: Converting<br>Organic Waste</div>
+        <div class="build-subtitle">Researcher · October 2025 – Present · UPenn CBE Lab</div>
+        <div class="build-tags">
+          <span class="build-tag bt-lime">Biogas</span>
+          <span class="build-tag bt-yellow">AI / Reinforcement Learning</span>
+          <span class="build-tag bt-pink">Sustainability</span>
+          <span class="build-tag bt-green">UPenn</span>
+        </div>
+        <p class="build-desc">COW transforms campus food waste into renewable biogas using AI-optimized anaerobic digesters. Penn generates <strong>17 lbs of food waste per meal per day</strong> — COW converts this into clean energy, fertilizer, and a living lab for students.</p>
+        <p class="build-desc">Food scraps are slurried and fed into a sealed tank where microbes break down organic material, producing biogas (mostly methane) stored in a flexible gas balloon. The system is modular and designed for replication across dining locations.</p>
+        <p class="build-desc">Our AI uses a <strong>Soft Actor-Critic (SAC) reinforcement learning agent</strong> to autonomously optimize temperature (37°C) and pH (7.0), achieving <strong>23% greater efficiency</strong> and approximately half the energy usage compared to traditional PID control. A live dashboard displays system data for the Penn community.</p>
+        <p class="build-desc">We designed, built, and tested a small-scale biodigester prototype in the CBE lab, equipped with methane and temperature sensors showing steady increases in methane concentration. First at Penn to merge AI + anaerobic digestion for renewable energy.</p>
+        <div class="build-links">
+          <a class="build-link" href="#" onclick="return false;" style="opacity:0.5;cursor:default;">📊 Live Dashboard — Coming Soon</a>
+        </div>
+      </div>
+      <div>
+        <div class="cow-values">
+          <div class="cow-value"><div class="cow-value-icon">⚡</div><div class="cow-value-title">Energy</div><div class="cow-value-desc">Biogas to run kitchen appliances & assist space/water heating</div></div>
+          <div class="cow-value"><div class="cow-value-icon">🌱</div><div class="cow-value-title">Fertilizer</div><div class="cow-value-desc">Digestate for campus gardens & Penn's Morris Arboretum</div></div>
+          <div class="cow-value"><div class="cow-value-icon">📐</div><div class="cow-value-title">Scalable</div><div class="cow-value-desc">Modular, open-source design replicable across campuses worldwide</div></div>
+          <div class="cow-value"><div class="cow-value-icon">🎓</div><div class="cow-value-title">Education</div><div class="cow-value-desc">Living lab for students to analyze real biological & chemical data</div></div>
+        </div>
+        <div class="info-box" style="background:var(--pink2);">
+          <div class="info-box-label">ROI per 1m³ Unit (Annual)</div>
+          <div class="info-box-content">
+            ⚡ +6 MWh/year net energy<br>
+            💰 +$300/year net financing<br>
+            ♻️ 4.2 tons food waste diverted/year<br>
+            🌍 92 tons CO₂ avoided/year
+          </div>
+        </div>
+        <div class="info-box" style="background:var(--lime);">
+          <div class="info-box-label">AI vs. Traditional PID Control</div>
+          <div class="info-box-content">
+            🤖 23% more efficient<br>
+            🔋 ~50% less energy used<br>
+            📈 More consistent biogas output<br>
+            🎯 Superior pH & temperature control
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AeroDash -->
+  <div class="build-panel" id="panel-aerodash">
+    <div class="build-hero">
+      <div>
+        <div class="build-title">AeroDash</div>
+        <div class="build-subtitle">Reshaping the Shipping Industry</div>
+        <div class="build-tags">
+          <span class="build-tag bt-lime">Sustainability</span>
+          <span class="build-tag bt-yellow">Logistics</span>
+          <span class="build-tag bt-pink">Aerospace</span>
+        </div>
+        <p class="build-desc">AeroDash explores how aerodynamic innovation can drive zero-impact freight and sustainable logistics — reimagining shipping at a systems level to reduce emissions across global supply chains.</p>
+        <p class="build-desc">Rooted in research from the Clear Seas internship on pathways to zero-impact shipping, this project bridges engineering with sustainability consulting.</p>
+      </div>
+      <div>
+        <div class="info-box" style="background:var(--lime);">
+          <div class="info-box-label">The Problem</div>
+          <div class="info-box-content" style="font-size:15px;">Maritime shipping accounts for ~2.5% of global greenhouse gas emissions. AeroDash explores technology and design pathways toward truly zero-impact freight.</div>
+        </div>
+        <div class="info-box" style="background:var(--yellow);">
+          <div class="info-box-label">Related Experience</div>
+          <div class="info-box-content">🚢 Clear Seas Research Intern — Zero-Impact Shipping<br>📊 cDots Wharton Sustainability Consultant</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Other -->
+  <div class="build-panel" id="panel-other">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+      <div style="background:var(--bg);border:1.5px solid rgba(255,189,211,0.3);border-radius:16px;padding:28px;transition:transform 0.25s;" onmouseenter="this.style.transform='translateY(-4px)'" onmouseleave="this.style.transform='translateY(0)'">
+        <div style="font-size:28px;margin-bottom:12px;">🐾</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;margin-bottom:8px;">Bark'd</div>
+        <p style="font-size:14px;color:rgba(30,18,32,0.6);line-height:1.7;">Founder — October 2025 – Present, Philadelphia, PA. A new venture at the intersection of community and care.</p>
+        <span style="background:var(--pink);border-radius:100px;padding:4px 12px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;margin-top:12px;display:inline-block;">Founder</span>
+      </div>
+      <div style="background:var(--bg);border:1.5px solid rgba(255,189,211,0.3);border-radius:16px;padding:28px;transition:transform 0.25s;" onmouseenter="this.style.transform='translateY(-4px)'" onmouseleave="this.style.transform='translateY(0)'">
+        <div style="font-size:28px;margin-bottom:12px;">🎬</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;margin-bottom:8px;">Clipped</div>
+        <p style="font-size:14px;color:rgba(30,18,32,0.6);line-height:1.7;">An intelligent video tool that automatically captures only the best moments — making memory-keeping effortless and genuinely joyful.</p>
+        <span style="background:var(--yellow);border-radius:100px;padding:4px 12px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;margin-top:12px;display:inline-block;">Creative Tech</span>
+      </div>
+      <div style="background:var(--bg);border:1.5px solid rgba(255,189,211,0.3);border-radius:16px;padding:28px;transition:transform 0.25s;" onmouseenter="this.style.transform='translateY(-4px)'" onmouseleave="this.style.transform='translateY(0)'">
+        <div style="font-size:28px;margin-bottom:12px;">♟</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;margin-bottom:8px;">YCSW</div>
+        <p style="font-size:14px;color:rgba(30,18,32,0.6);line-height:1.7;">Youth Chess Schools West Vancouver — affordable tournaments expanding access to competitive chess regardless of financial background. Founded April 2023.</p>
+        <span style="background:var(--lime);border-radius:100px;padding:4px 12px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;margin-top:12px;display:inline-block;">Founder</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <p class="section-label">004 — Experience</p>
+  <h2 class="section-title reveal">WHERE<br>I'VE BEEN</h2>
+
+  <!-- Chess -->
+  <div class="highlight-box reveal" style="background:linear-gradient(135deg,var(--yellow),var(--lime));">
+    <div class="highlight-box-title">♟ Chess Career</div>
+    <div class="highlight-box-sub">Women's FIDE Master · Former #1 Junior Female in Canada · Team Canada</div>
+    <div class="award-list">
+      <div class="award-item"><span class="medal">🏆</span><div><strong>Women's FIDE Master (WFM) Title</strong>, FIDE — 2022–Present</div></div>
+      <div class="award-item"><span class="medal">🌍</span><div><strong>Top 10 Female Chess Players in Canada</strong>, FIDE — 2022–Present</div></div>
+      <div class="award-item"><span class="medal">⭐</span><div><strong>Top 1 Junior Female Chess Player, Canada</strong>, FIDE — 2022–Present</div></div>
+      <div class="award-item"><span class="medal">🌎</span><div><strong>1st in Most Ratings Gained</strong> — Youngest & Only U18 Player on <strong>Team Canada</strong>, 44th Chess Olympiad, FIDE — 2022</div></div>
+      <div class="award-item"><span class="medal">🎖</span><div><strong>Official U18 Girls Player of Team Canada</strong>, Pan-American Youth Chess Championship, FIDE — 2023</div></div>
+      <div class="award-item"><span class="medal">🥉</span><div><strong>3rd Place & Qualified for WFM</strong>, Canadian Women Zonal, FIDE — 2022</div></div>
+      <div class="award-item"><span class="medal">🏅</span><div><strong>Top 3, All Age Categories (except U18)</strong>, Canadian Youth Chess Championship U8, U10, U12, U14, U16 — 2015–Present</div></div>
+      <div class="award-item"><span class="medal">🎓</span><div><strong>2024 Kalev Pugi Women Scholarship Award</strong> — December 2024</div></div>
+      <div class="award-item"><span class="medal">👩‍🏫</span><div>Taught <strong>105+ students</strong> for <strong>200+ hours</strong> as Chess Coach · Founded <strong>Youth Chess Schools West Vancouver</strong> — April 2023</div></div>
+    </div>
+  </div>
+
+  <!-- Science Fair -->
+  <div class="highlight-box reveal" style="background:linear-gradient(135deg,var(--pink2),var(--pink));margin-bottom:48px;">
+    <div class="highlight-box-title">🔬 Science Fair</div>
+    <div class="highlight-box-sub">Team Canada · ISEF · MILSET-ESI · Canada-Wide Science Fair</div>
+    <div class="award-list">
+      <div class="award-item"><span class="medal">🇨🇦</span><div><strong>Team Canada, Youth Science Canada</strong> — October 2022–Present</div></div>
+      <div class="award-item"><span class="medal">🥉</span><div>1 of 8 selected as Finalist for Team Canada at <strong>ISEF 2025</strong> (Ohio) — <em>Dual-Purpose Biological Photovoltaic: Optimizing Power Output and Wastewater Treatment</em> — <strong>3rd Award, Environmental Engineering</strong></div></div>
+      <div class="award-item"><span class="medal">⭐</span><div>1 of 31 selected as Candidate for Team Canada at ISEF; 1 of 20 invited to the ISEF <strong>Selection and Mentorship Program</strong> as a promising candidate for Team Canada 2025</div></div>
+      <div class="award-item"><span class="medal">🌐</span><div>1 of 30 selected as Finalist for Team Canada at <strong>MILSET-ESI</strong> — Received <strong>Best Delegation Award</strong>, recognizing scientific acumen, openness toward other cultures, and embodiment of the MILSET spirit — 700+ students; 30+ countries</div></div>
+      <div class="award-item"><span class="medal">🥇</span><div><strong>CWSF 2024</strong> — Gold ($5k Carleton U, Dalhousie U, Mt. Allison U, UNB, U of Manitoba; $4k UBC, U of Ottawa, Western) + <strong>Energy Challenge Award</strong> + Canadian Stockholm Junior Water Prize Finalist ($300) + <strong>Hydrogen Optimized Green Energy Award</strong> ($1,000) + Renewable Energy Award ($1,000) + Senior Youth Can Innovate Award ($1,000) — <em>most awards of 450 participants (selected from 25,000+, top 2%)</em></div></div>
+      <div class="award-item"><span class="medal">🥇</span><div><strong>CWSF 2023</strong> — <em>Biological Photovoltaics: Testing Algae for the Optimal Battery</em> — Gold ($4k Western; $5k U of Alberta) + <strong>Energy Challenge Award</strong> + Intermediate Youth Can Innovate Award ($750)</div></div>
+      <div class="award-item"><span class="medal">🥈</span><div><strong>CWSF 2022</strong> — <em>Bioelectric Batteries: Using Algae to Make the Battery Renewable</em> — Silver ($2k Western) + <strong>Energy Challenge Award</strong></div></div>
+    </div>
+  </div>
+
+  <div class="exp-layout">
+    <div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;">Work & Research</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">Dec 2025 – Present</div>
+          <div class="tl-role">Founding Growth Intern</div>
+          <div class="tl-org">Vela (YC W26) — AI Scheduling Assistant · San Francisco, CA</div>
+          <p class="tl-desc">0-to-1 role at the intersection of product and distribution. Work directly with founders to build go-to-market motion — defining targets, designing outbound experiments, managing deal flow.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">Oct 2025 – Present</div>
+          <div class="tl-role">Volunteer Intern — Lab Tech & Market Research</div>
+          <div class="tl-org">Hydropore · Philadelphia, PA</div>
+          <p class="tl-desc">Developing materials and reactors to produce the cleanest, cheapest hydrogen molecule for transportation. Fabricating battery electrodes and conducting electrochemical testing.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">Sep 2025 – Present</div>
+          <div class="tl-role">Undergraduate Research Assistant</div>
+          <div class="tl-org">Mallouk Group, University of Pennsylvania · Philadelphia, PA</div>
+          <p class="tl-desc">Quantifying kinetics of photocatalytic water splitting via UV-Vis, transient absorption spectroscopy, ICP/elemental analysis, and gas chromatography. Nanomaterial processing on dye-sensitized solar cells for biomimetic Z-schemes.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">Sep 2025 – Present</div>
+          <div class="tl-role">Consultant</div>
+          <div class="tl-org">cDots, Wharton Impact & Sustainability Consulting · Philadelphia, PA</div>
+          <p class="tl-desc">Supporting Coalition for Green Capital and ICLE work with the Muscogee (Creek) Nation — building a pipeline of clean energy projects designed to mobilize $50M+ in capital. Helped establish a partnership with a Green Bank.</p>
+          <span class="tl-award">$50M+ Capital Pipeline</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">Jul 2023 – Present</div>
+          <div class="tl-role">Founder & CEO</div>
+          <div class="tl-org">Algaefy Enterprises LTD · Vancouver, BC</div>
+          <p class="tl-desc">Environment-focused company delivering renewable energy and wastewater treatment to less economically developed regions worldwide using dual-purpose BPVs. Piloting with Loudong General Nice Resources in Xiaoyi, Shanxi.</p>
+          <span class="tl-award">2× Conrad Innovator · Diamond Challenge · Blue Ocean T300</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;">Activities & Leadership</div>
+      <div class="activities-grid">
+        <div class="activity-chip"><strong>Energy Nexus, UPenn</strong><span>Board Member · Feb 2026</span></div>
+        <div class="activity-chip"><strong>Society of Women Engineers</strong><span>Advocacy Committee · Feb 2026</span></div>
+        <div class="activity-chip"><strong>AIChE, UPenn</strong><span>Freshman Rep · Oct 2025</span></div>
+        <div class="activity-chip"><strong>Engineers Without Borders</strong><span>Club Member · Oct 2025</span></div>
+        <div class="activity-chip"><strong>Energy Terminal Online</strong><span>Cohort 7 · Feb 2026</span></div>
+        <div class="activity-chip"><strong>MatSci Makers, UPenn</strong><span>Club Member · Feb 2026</span></div>
+        <div class="activity-chip"><strong>MSE Society, UPenn</strong><span>Club Member · Feb 2026</span></div>
+        <div class="activity-chip"><strong>Girls Who Lead</strong><span>Dir. Analytics & Innovation</span></div>
+        <div class="activity-chip"><strong>Penn Vet Working Dog Ctr</strong><span>Volunteer · Dog Training</span></div>
+        <div class="activity-chip"><strong>Chess Club, UPenn</strong><span>Board Member · Sep 2025</span></div>
+      </div>
+      <div style="margin-top:20px;padding:24px;background:var(--pink2);border-radius:16px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:10px;opacity:0.6;">Skills</div>
+        <div style="font-size:14px;line-height:2;color:var(--dark);">Electrode Fabrication · Spectroscopy · Gas Chromatography · MATLAB · Python · R · Statistical Analysis · Experimental Design · Market Research · Techno-Economic Analysis</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEOGRAPHY -->
+<section id="videography">
+  <p class="section-label">005 — Videography</p>
+  <h2 class="section-title reveal">DO ART &<br>KEEP DOING IT</h2>
+  <div class="video-intro reveal">
+    <p>I pick up a camera for the same reason I run experiments — because I want to <em>understand something</em>. Vlogging is just the lab where I study joy, people, and the texture of everyday life. Kurt Vonnegut said "do art and do it for the rest of your lives." I think about that a lot while editing at 1am.</p>
+  </div>
+  <div class="video-grid">
+    <a class="video-card reveal" href="https://youtu.be/dGQTmev7oeo" target="_blank">
+      <div class="video-thumb video-thumb-1"><div class="video-play">▶</div></div>
+      <div class="video-info">
+        <div class="video-title">Latest Vlog</div>
+        <p class="video-desc">A window into my world — the moments between the science fair wins and startup pitches. Real life, documented with curiosity.</p>
+        <div class="video-link-label">Watch on YouTube ↗</div>
+      </div>
+    </a>
+    <a class="video-card reveal" href="https://youtu.be/VEKdngGrowY" target="_blank">
+      <div class="video-thumb video-thumb-2"><div class="video-play">▶</div></div>
+      <div class="video-info">
+        <div class="video-title">Featured Video</div>
+        <p class="video-desc">Spreading joy beyond my region — vlogging has given me a platform to share what my camera records with people across the world.</p>
+        <div class="video-link-label">Watch on YouTube ↗</div>
+      </div>
+    </a>
+  </div>
+  <div class="youtube-cta reveal">
+    <a class="youtube-btn" href="https://www.youtube.com/@v_lovesvlogs" target="_blank">▶ Visit My YouTube Channel</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="orb orb1" style="opacity:0.35;"></div>
+  <p class="section-label" style="justify-content:center;">006 — Contact</p>
+  <h2 class="section-title reveal">LET'S<br>CONNECT</h2>
+  <p class="contact-sub reveal">Open to research, startups, creative collaborations, and good conversations.</p>
+  <div class="contact-grid reveal">
+    <a class="contact-btn" href="mailto:veronica88.guo@gmail.com">
+      <span class="contact-btn-icon">✉</span><span class="contact-btn-label">Email</span>
+    </a>
+    <a class="contact-btn" href="https://www.linkedin.com/in/veronica-guo-b83097278/" target="_blank">
+      <span class="contact-btn-icon">in</span><span class="contact-btn-label">LinkedIn</span>
+    </a>
+    <a class="contact-btn" href="https://www.youtube.com/@v_lovesvlogs" target="_blank">
+      <span class="contact-btn-icon">▶</span><span class="contact-btn-label">YouTube</span>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Veronica Guo</div>
+  <div class="footer-copy">© 2026 · Built with curiosity</div>
+</footer>
+
+<script>
+// ── Cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cursor.style.transform=`translate(${mx-5}px,${my-5}px)`;
+});
+function animateRing(){
+  rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+  ring.style.transform=`translate(${rx-18}px,${ry-18}px)`;
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+document.querySelectorAll('a,button,.interest-card,.hero-tag').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ ring.style.width='52px'; ring.style.height='52px'; ring.style.borderColor='rgba(255,189,211,1)'; });
+  el.addEventListener('mouseleave',()=>{ ring.style.width='36px'; ring.style.height='36px'; ring.style.borderColor='rgba(255,189,211,0.7)'; });
+});
+
+// ── Tabs
+function showBuild(id,btn){
+  document.querySelectorAll('.build-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.build-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── Scroll reveal
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.08});
+document.querySelectorAll('.reveal,.tl-item').forEach(el=>{
+  el.classList.add('animate');
+  obs.observe(el);
+});
+document.querySelectorAll('.tl-item').forEach((el,i)=>{ el.style.transitionDelay=`${i*0.07}s`; });
+</script>
+</body>
+</html>
